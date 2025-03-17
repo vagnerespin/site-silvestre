@@ -1,0 +1,8 @@
+# Ambiente virtual
+venv/
+__pycache__/
+*.pyc
+instance/
+site.db
+.DS_Store
+.env
