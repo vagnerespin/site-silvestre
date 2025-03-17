@@ -1,0 +1,52 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Mapa Interativo com Espécies e Mascotes</h2>
+
+<!-- Garantir que o CSS do Leaflet seja carregado -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+
+<div id="map" style="height: 500px; width: 100%; border: 1px solid #ccc;"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+<script>
+    console.log("Iniciando carregamento do mapa...");
+    var map = L.map('map').setView([-10.2, -48.3], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap Contributors'
+    }).addTo(map);
+
+    console.log("Mapa carregado. Adicionando marcadores...");
+
+    {% for local in locais %}
+        {% if local.latitude and local.longitude %}
+            var marker = L.marker([{{ local.latitude }}, {{ local.longitude }}]).addTo(map);
+            var popupContent = "<strong>{{ local.nome }}</strong><br>{{ local.descricao }}<br><br>";
+
+            {% if local.especies %}
+                popupContent += "<u>Espécies encontradas:</u><br>";
+                {% for especie in local.especies %}
+                    popupContent += "<div style='margin-bottom:10px; padding:5px; border-bottom:1px dashed #ccc'>";
+                    popupContent += "<strong>{{ especie.nome_comum }}</strong><br>";
+                    popupContent += "<em>{{ especie.nome_cientifico }}</em><br>";
+                    popupContent += "{{ especie.descricao }}<br>";
+                    {% if especie.imagem_url %}
+                        popupContent += "<img src='{{ especie.imagem_url }}' width='100' style='margin-top:5px'><br>";
+                    {% endif %}
+                    popupContent += "</div>";
+                {% endfor %}
+            {% else %}
+                popupContent += "<em>Nenhuma espécie cadastrada neste local.</em>";
+            {% endif %}
+
+            marker.bindPopup(popupContent);
+        {% endif %}
+    {% endfor %}
+
+    console.log("Todos marcadores processados.");
+</script>
+{% endblock %}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionar Espécie</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        form {
+            max-width: 600px;
+            margin: 30px auto;
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin-top: 5px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #0077aa;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #005f8d;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="{{ url_for('main.index') }}">Início</a>
+        <a href="{{ url_for('main.listar_especies') }}">Espécies</a>
+        <a href="{{ url_for('main.listar_locais') }}">Locais</a>
+    </nav>
+
+    <h2 style="text-align:center;">Cadastrar Nova Espécie</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        <label for="nome_comum">Nome Comum:</label>
+        <input type="text" id="nome_comum" name="nome_comum" required>
+
+        <label for="nome_cientifico">Nome Científico:</label>
+        <input type="text" id="nome_cientifico" name="nome_cientifico" required>
+
+        <label for="descricao">Descrição:</label>
+        <textarea id="descricao" name="descricao" required></textarea>
+
+        <label for="local_id">Local de Ocorrência:</label>
+        <select name="local_id" id="local_id" required>
+            <option value="">Selecione o Local</option>
+            {% for local in locais %}
+                <option value="{{ local.id }}">{{ local.nome }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="imagem">Imagem da Espécie:</label>
+        <input type="file" name="imagem" accept="image/*">
+
+        <button type="submit">Cadastrar Espécie</button>
+    </form>
+
+</body>
+</html>

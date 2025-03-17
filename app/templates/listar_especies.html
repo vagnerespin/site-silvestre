@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Espécies Cadastradas</h2>
+<table>
+  <thead>
+    <tr><th>Nome</th><th>Descrição</th><th>Local Associado</th></tr>
+  </thead>
+  <tbody>
+    {% for especie in especies %}
+    <tr>
+      <td>{{ especie.nome }}</td>
+      <td>{{ especie.descricao }}</td>
+      <td>{{ especie.local.nome if especie.local }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,18 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h2>Bem-vindo ao Portal</h2>
+<div id="map" style="height: 400px; width: 100%; border: 1px solid #ccc;"></div>
+{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" defer></script>
+<script defer>
+document.addEventListener("DOMContentLoaded", function() {
+    var map = L.map('map').setView([-10.2, -48.3], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+});
+</script>
+{% endblock %}

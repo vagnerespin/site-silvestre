@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Portal da Fauna Silvestre</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header style="background-color: #2d89ef; color: white; padding: 10px;">
+        <h1 style="margin: 0;">🌿 Portal da Fauna Silvestre</h1>
+        <nav style="margin-top: 10px;">
+            <a href="{{ url_for('main.index') }}" style="color:white; margin-right:10px;">Início</a>
+            <a href="{{ url_for('main.listar_especies') }}" style="color:white; margin-right:10px;">Espécies</a>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('main.add_especie') }}" style="color:white; margin-right:10px;">Cadastrar Espécie</a>
+                <a href="{{ url_for('main.cadastrar_local') }}" style="color:white; margin-right:10px;">Cadastrar Local</a>
+                <a href="{{ url_for('main.dashboard') }}" style="color:white; margin-right:10px;">Dashboard</a>
+                <a href="{{ url_for('auth.logout') }}" style="color:white;">Sair</a>
+            {% else %}
+                <a href="{{ url_for('auth.login') }}" style="color:white;">Login</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main style="padding: 20px;">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer style="background-color: #f0f0f0; text-align: center; padding: 10px; margin-top: 20px;">
+        <small>© 2025 - Projeto Educativo da Fauna Silvestre</small>
+    </footer>
+</body>
+</html>

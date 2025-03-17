@@ -1,0 +1,15 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h2>Cadastro</h2>
+    <form method="POST" action="{{ url_for('auth.register') }}">
+        <label for="username">Usuário:</label><br>
+        <input type="text" name="username" required><br><br>
+        <label for="password">Senha:</label><br>
+        <input type="password" name="password" required><br><br>
+        <button type="submit">Cadastrar</button>
+    </form>
+    <p>Já tem conta? <a href="{{ url_for('auth.login') }}">Clique aqui para login</a>.</p>
+</div>
+{% endblock %}

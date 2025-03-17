@@ -1,0 +1,103 @@
+
+{% extends 'base.html' %}
+
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+<style>
+  #map { height: 500px !important; width: 100%; border: 1px solid #ccc; margin-top: 20px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>Mapa Interativo</h2>
+
+<!-- Popup de boas-vindas com mascotes locais -->
+<div id="popup-bemvindo" style="position: fixed; top: 50px; left: 50%; transform: translateX(-50%);
+     background-color: #ffffff; border-radius: 12px; box-shadow: 0px 4px 20px rgba(0,0,0,0.2); padding: 20px; z-index: 1000; width: 80%; max-width: 600px; display: block;">
+  <h3 style="text-align: center;">👋 Bem-vindo ao Mapa da Fauna Silvestre!</h3>
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
+    <div style="text-align: center;">
+      <img src="{{ url_for('static', filename='img/mascote_mucura.png') }}" width="80"><br>
+      <strong>Mucura</strong><br>
+      Clique nos pontos do mapa para ver quais espécies vivem naquele local.
+    </div>
+    <div style="text-align: center;">
+      <img src="{{ url_for('static', filename='img/mascote_capivara.png') }}" width="80"><br>
+      <strong>Capivara</strong><br>
+      Explore o mapa e conheça a fauna brasileira nos parques da sua cidade.
+    </div>
+    <div style="text-align: center;">
+      <img src="{{ url_for('static', filename='img/mascote_arara.png') }}" width="80"><br>
+      <strong>Arara</strong><br>
+      Ajude a preservar! Cadastre novos locais e espécies, se for gestor.
+    </div>
+  </div>
+  <div style="text-align: center; margin-top: 20px;">
+    <button onclick="document.getElementById('popup-bemvindo').style.display='none';"
+      style="padding: 8px 20px; border: none; background-color: #2d89ef; color: white; border-radius: 8px;">
+      Entendi!
+    </button>
+  </div>
+</div>
+
+<div id="map"></div>
+
+<!-- Modal dinâmico -->
+<div id="species-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.6); z-index:2000; justify-content:center; align-items:center;">
+  <div style="background:#fff; border-radius:12px; padding:20px; max-width:700px; width:90%; max-height:80%; overflow:auto; position:relative;">
+    <button onclick="document.getElementById('species-modal').style.display='none';"
+        style="position:absolute; top:10px; right:10px; background:#c00; color:white; border:none; padding:5px 10px; border-radius:6px;">
+      Fechar
+    </button>
+    <div id="species-content"></div>
+  </div>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+<script>
+  window.onload = function () {
+    var map = L.map('map').setView([-10.2, -48.3], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap Contributors'
+    }).addTo(map);
+
+    {% for local in locais %}
+      {% if local.latitude and local.longitude %}
+        var marker = L.marker([{{ local.latitude }}, {{ local.longitude }}]).addTo(map);
+        var popupContent = "<strong>{{ local.nome }}</strong><br>{{ local.descricao }}<br><br>";
+        popupContent += "<button onclick='abrirModal("local_{{ local.id }}")'>Ver mais</button>";
+        marker.bindPopup(popupContent);
+
+        var especieHtml = `<h3>Espécies no local: {{ local.nome }}</h3>`;
+        {% if local.especies %}
+          especieHtml += "<ul>";
+          {% for especie in local.especies %}
+            especieHtml += "<li><strong>{{ especie.nome_comum }}</strong>";
+            {% if especie.nome_cientifico %}
+              especieHtml += " (<em>{{ especie.nome_cientifico }}</em>)";
+            {% endif %}
+            {% if especie.descricao %}
+              especieHtml += "<br>{{ especie.descricao }}";
+            {% endif %}
+            {% if especie.imagem_url %}
+              especieHtml += "<br><img src='{{ url_for('static', filename='img/' ~ especie.imagem_url) }}' width='100'>";
+            {% endif %}
+            especieHtml += "</li><hr>";
+          {% endfor %}
+          especieHtml += "</ul>";
+        {% else %}
+          especieHtml += "<em>Nenhuma espécie cadastrada neste local.</em>";
+        {% endif %}
+        window["local_{{ local.id }}"] = especieHtml;
+      {% endif %}
+    {% endfor %}
+  }
+
+  function abrirModal(id){
+    document.getElementById("species-content").innerHTML = window[id];
+    document.getElementById("species-modal").style.display = "flex";
+  }
+</script>
+{% endblock %}

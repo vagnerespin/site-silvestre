@@ -1,0 +1,24 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h2>Listagem Auxiliar: Espécies por Local</h2>
+{% for local in locais %}
+    <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+        <h3>{{ local.nome }}</h3>
+        <p>{{ local.descricao }}</p>
+        <ul>
+        {% for especie in local.especies %}
+            <li>
+                <strong>{{ especie.nome_comum }}</strong> ({{ especie.nome_cientifico }})<br>
+                {{ especie.descricao }}
+                {% if especie.imagem_url %}
+                    <br><img src="{{ especie.imagem_url }}" width="100">
+                {% endif %}
+            </li>
+        {% else %}
+            <li><em>Nenhuma espécie associada.</em></li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endfor %}
+{% endblock %}

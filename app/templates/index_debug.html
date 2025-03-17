@@ -1,0 +1,27 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h2>DEBUG: Locais e espécies diretamente no HTML</h2>
+<ul>
+{% for local in locais %}
+    <li>
+        <strong>{{ local.nome }}</strong><br>
+        {{ local.descricao }}<br>
+        <strong>Espécies:</strong>
+        <ul>
+        {% for especie in local.especies %}
+            <li>
+                <strong>{{ especie.nome_comum }}</strong> ({{ especie.nome_cientifico }})<br>
+                {{ especie.descricao }}<br>
+                {% if especie.imagem_url %}
+                    <img src="{{ especie.imagem_url }}" width="80">
+                {% endif %}
+            </li>
+        {% else %}
+            <li><em>Nenhuma espécie cadastrada.</em></li>
+        {% endfor %}
+        </ul>
+    </li>
+{% endfor %}
+</ul>
+{% endblock %}

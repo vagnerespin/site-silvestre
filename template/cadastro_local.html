@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <div class="card shadow-lg p-4">
+    <h2 class="mb-4">Cadastrar Novo Local</h2>
+    <form action="{{ url_for('main.cadastrar_local') }}" method="POST">
+      <div class="mb-3">
+        <label class="form-label">Nome do Local:</label>
+        <input type="text" class="form-control" name="nome" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Descrição:</label>
+        <textarea class="form-control" name="descricao"></textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Endereço (Google Maps):</label>
+        <input type="text" class="form-control" id="endereco" placeholder="Digite o endereço completo">
+        <button type="button" class="btn btn-primary mt-2" onclick="buscarCoordenadas()">Buscar Coordenadas</button>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Latitude:</label>
+        <input type="text" class="form-control" name="latitude" id="latitude" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Longitude:</label>
+        <input type="text" class="form-control" name="longitude" id="longitude" required>
+      </div>
+      <button type="submit" class="btn btn-success">Cadastrar Local</button>
+    </form>
+  </div>
+</div>
+
+<script>
+function buscarCoordenadas() {
+  const endereco = document.getElementById("endereco").value;
+  const apiKey = "SUA_CHAVE_API_GOOGLE_MAPS";  // Substitua aqui
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(endereco)}&key=${apiKey}`;
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      if (data.status === "OK") {
+        const location = data.results[0].geometry.location;
+        document.getElementById("latitude").value = location.lat;
+        document.getElementById("longitude").value = location.lng;
+      } else {
+        alert("Endereço não encontrado. Verifique e tente novamente.");
+      }
+    })
+    .catch(error => {
+      console.error("Erro ao buscar coordenadas:", error);
+      alert("Erro ao buscar coordenadas.");
+    });
+}
+</script>
+{% endblock %}

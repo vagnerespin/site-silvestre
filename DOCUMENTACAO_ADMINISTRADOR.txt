@@ -1,0 +1,13 @@
+DOCUMENTAÇÃO - PORTAL MAPA PALMAS
+
+- Login: /login
+- Dashboard: /dashboard
+- Cadastrar espécie: /add_especie
+- Listar espécies: /listar_especies
+- Cadastrar local: /cadastrar_local
+- Listar locais: /listar_locais
+- Gerenciar usuários: /usuarios
+
+Exportações disponíveis: CSV para espécies, locais e usuários.
+Gráficos no dashboard (Chart.js).
+Perfis: admin / colaborador.

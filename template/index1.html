@@ -1,0 +1,62 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Palmas - Mapa Interativo</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        #map { height: 100vh; width: 100%; }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+            z-index: 9999;
+        }
+        .modal h3 { margin-top: 0; }
+        .modal ul { padding-left: 20px; }
+        .modal button { margin-top: 20px; padding: 8px 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <div id="species-modal" class="modal">
+        <h3>Espécies do Parque Cesamar</h3>
+        <ul>
+            <li><strong>Capivara</strong> (<em>Hydrochoerus hydrochaeris</em>) - Mamífero roedor aquático.</li>
+            <li><strong>Socozinho</strong> (<em>Butorides striata</em>) - Ave pescadora.</li>
+            <li><strong>Tatu-galinha</strong> (<em>Dasypus novemcinctus</em>) - Mamífero cavador noturno.</li>
+        </ul>
+        <button onclick="fecharModal()">Fechar</button>
+    </div>
+
+    <script>
+        var map = L.map('map').setView([-10.2396, -48.3243], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var marker = L.marker([-10.2196, -48.3240]).addTo(map);
+        marker.bindPopup('<b>Parque Cesamar</b><br>🐾 Capivaras, aves, répteis.<br><button onclick="abrirModal()">Ver mais</button>');
+
+        function abrirModal() {
+            document.getElementById('species-modal').style.display = 'block';
+        }
+
+        function fecharModal() {
+            document.getElementById('species-modal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

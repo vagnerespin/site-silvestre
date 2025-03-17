@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Cadastrar Novo Local{% endblock %}
+{% block content %}
+<h2>Cadastrar Novo Local</h2>
+<form method="POST" action="{{ url_for('main.cadastrar_local') }}">
+    <label for="nome">Nome do Local:</label>
+    <input type="text" id="nome" name="nome" required><br>
+
+    <label for="descricao">Descrição:</label>
+    <textarea id="descricao" name="descricao" rows="3" cols="40"></textarea><br><br>
+
+    <button type="submit">Cadastrar Local</button>
+</form>
+{% endblock %}

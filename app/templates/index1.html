@@ -1,0 +1,28 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h2>Mapa Interativo</h2>
+<div id="map" style="height: 500px; width: 100%;"></div>
+
+<script>
+    var map = L.map('map').setView([-10.2, -48.3], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    {% for local in locais %}
+        {% if local.latitude and local.longitude %}
+            var marker = L.marker([{{ local.latitude }}, {{ local.longitude }}]).addTo(map);
+            var popupContent = "<strong>{{ local.nome }}</strong><br>{{ local.descricao }}<br><br>";
+
+            {% if local.especies %}
+                popupContent += "<u>Espécies encontradas:</u><ul>";
+                {% for especie in local.especies %}
+                    popupContent += "<li>{{ especie.nome_comum }}</li>";
+                {% endfor %}
+                popupContent += "</ul>";
+            {% endif %}
+
+            marker.bindPopup(popupContent);
+        {% endif %}
+    {% endfor %}
+</script>
+{% endblock %}

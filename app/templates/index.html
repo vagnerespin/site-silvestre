@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Popup de boas-vindas com mascotes -->
+<div id="popup-bemvindo" class="modal" tabindex="-1" style="display: block; background: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center p-4">
+      <h4 class="modal-title mb-3">Bem-vindo ao Portal da Fauna!</h4>
+      <div class="d-flex justify-content-center mb-3">
+        <img src="{{ url_for('static', filename='img/mascote_mucura.png') }}" alt="Mucura" style="height: 80px; margin: 0 10px;">
+        <img src="{{ url_for('static', filename='img/mascote_capivara.png') }}" alt="Capivara" style="height: 80px; margin: 0 10px;">
+        <img src="{{ url_for('static', filename='img/mascote_arara.png') }}" alt="Arara" style="height: 80px; margin: 0 10px;">
+      </div>
+      <button class="btn btn-success" onclick="fecharPopup()">Explorar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Mapa -->
+<div id="map" class="mt-4"></div>
+
+<script>
+  function fecharPopup() {
+    document.getElementById('popup-bemvindo').style.display = 'none';
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var map = L.map('map').setView([-10.183, -48.333], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a>'
+    }).addTo(map);
+
+    var locais = {{ locais | tojson }};
+    locais.forEach(function(local) {
+      var conteudo = "<strong>" + local.nome + "</strong><br>" + local.descricao;
+      if (local.especies && local.especies.length > 0) {
+        conteudo += "<br><em>Espécies:</em><ul>";
+        local.especies.forEach(function(e) {
+          conteudo += "<li>" + e.nome + "</li>";
+        });
+        conteudo += "</ul>";
+      }
+      L.marker([local.latitude, local.longitude])
+        .addTo(map)
+        .bindPopup(conteudo);
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,72 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<h2>Mapa Interativo</h2>
+
+<!-- Popup de boas-vindas com mascotes locais -->
+<div id="popup-bemvindo" style="position: fixed; top: 50px; left: 50%; transform: translateX(-50%);
+     background-color: #ffffff; border-radius: 12px; box-shadow: 0px 4px 20px rgba(0,0,0,0.2); padding: 20px; z-index: 1000; width: 80%; max-width: 600px; display: block;">
+  <h3 style="text-align: center;">👋 Bem-vindo ao Mapa da Fauna Silvestre!</h3>
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
+    <div style="text-align: center;">
+      <img src="{{ url_for('static', filename='img/mascote_mucura.png') }}" width="80"><br>
+      <strong>Mucura</strong><br>
+      Clique nos pontos do mapa para ver quais espécies vivem naquele local.
+    </div>
+    <div style="text-align: center;">
+      <img src="{{ url_for('static', filename='img/mascote_capivara.png') }}" width="80"><br>
+      <strong>Capivara</strong><br>
+      Explore o mapa e conheça a fauna brasileira nos parques da sua cidade.
+    </div>
+    <div style="text-align: center;">
+      <img src="{{ url_for('static', filename='img/mascote_arara.png') }}" width="80"><br>
+      <strong>Arara</strong><br>
+      Ajude a preservar! Cadastre novos locais e espécies, se for gestor.
+    </div>
+  </div>
+  <div style="text-align: center; margin-top: 20px;">
+    <button onclick="document.getElementById('popup-bemvindo').style.display='none';"
+      style="padding: 8px 20px; border: none; background-color: #2d89ef; color: white; border-radius: 8px;">
+      Entendi!
+    </button>
+  </div>
+</div>
+
+<div id="map" style="height: 500px; width: 100%; margin-top: 20px; border: 1px solid #ccc;"></div>
+
+<!-- Leaflet CSS e JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
+<script>
+    var map = L.map('map').setView([-10.2, -48.3], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap Contributors'
+    }).addTo(map);
+
+    {% for local in locais %}
+        {% if local.latitude and local.longitude %}
+            var marker = L.marker([{{ local.latitude }}, {{ local.longitude }}]).addTo(map);
+            var popupContent = "<strong>{{ local.nome }}</strong><br>{{ local.descricao }}<br><br>";
+
+            {% if local.especies %}
+                popupContent += "<u>Espécies encontradas:</u><ul>";
+                {% for especie in local.especies %}
+                    popupContent += "<li><strong>{{ especie.nome_comum }}</strong><br>";
+                    popupContent += "<em>{{ especie.nome_cientifico }}</em><br>";
+                    popupContent += "{{ especie.descricao }}<br>";
+                    {% if especie.imagem_url %}
+                        popupContent += "<img src='{{ url_for('static', filename='img/' ~ especie.imagem_url) }}' width='100'><br>";
+                    {% endif %}
+                    popupContent += "</li>";
+                {% endfor %}
+                popupContent += "</ul>";
+            {% else %}
+                popupContent += "<em>Nenhuma espécie cadastrada neste local.</em>";
+            {% endif %}
+
+            marker.bindPopup(popupContent);
+        {% endif %}
+    {% endfor %}
+</script>
+{% endblock %}

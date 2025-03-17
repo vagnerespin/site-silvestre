@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Mapa Interativo Completo - Teste</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+        header {
+            background-color: #2d89ef;
+            color: white;
+            padding: 10px 20px;
+        }
+        header h1 {
+            margin: 0;
+        }
+        nav a {
+            color: white;
+            margin-right: 15px;
+            text-decoration: none;
+        }
+        #map {
+            height: 500px;
+            width: 100%;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+    </style>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>🌿 Portal da Fauna Silvestre</h1>
+        <nav>
+            <a href="#">Início</a>
+            <a href="#">Espécies</a>
+            <a href="#">Cadastrar Espécie</a>
+            <a href="#">Cadastrar Local</a>
+            <a href="#">Dashboard</a>
+        </nav>
+    </header>
+
+    <!-- Popup de boas-vindas com mascotes -->
+    <div id="popup-bemvindo" style="position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+        background-color: #ffffff; border-radius: 12px; box-shadow: 0px 4px 20px rgba(0,0,0,0.2); padding: 20px; z-index: 1000; width: 80%; max-width: 600px; display: block;">
+        <h3 style="text-align: center;">👋 Bem-vindo ao Mapa da Fauna Silvestre!</h3>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
+            <div style="text-align: center;">
+                <img src="static/img/mascote_mucura.png" width="80"><br>
+                <strong>Mucura</strong><br>
+                Clique nos pontos do mapa para ver quais espécies vivem naquele local.
+            </div>
+            <div style="text-align: center;">
+                <img src="static/img/mascote_capivara.png" width="80"><br>
+                <strong>Capivara</strong><br>
+                Explore o mapa e conheça a fauna brasileira nos parques da sua cidade.
+            </div>
+            <div style="text-align: center;">
+                <img src="static/img/mascote_arara.png" width="80"><br>
+                <strong>Arara</strong><br>
+                Ajude a preservar! Cadastre novos locais e espécies, se for gestor.
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="document.getElementById('popup-bemvindo').style.display='none';"
+                style="padding: 8px 20px; border: none; background-color: #2d89ef; color: white; border-radius: 8px;">
+                Entendi!
+            </button>
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+    <!-- Modal dinâmico -->
+    <div id="species-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.6); z-index:2000; justify-content:center; align-items:center;">
+      <div style="background:#fff; border-radius:12px; padding:20px; max-width:700px; width:90%; max-height:80%; overflow:auto; position:relative;">
+        <button onclick="document.getElementById('species-modal').style.display='none';"
+            style="position:absolute; top:10px; right:10px; background:#c00; color:white; border:none; padding:5px 10px; border-radius:6px;">
+          Fechar
+        </button>
+        <div id="species-content">
+            <h3>Espécies no local: Parque Cesamar</h3>
+            <ul>
+                <li><strong>Tamanduá-bandeira</strong> (Myrmecophaga tridactyla)<br>Espécie ameaçada em algumas regiões.</li>
+                <li><strong>Arara-canindé</strong> (Ara ararauna)<br>Colorida e abundante na região.</li>
+                <li><strong>Capivara</strong> (Hydrochoerus hydrochaeris)<br>Maior roedor do mundo.</li>
+            </ul>
+        </div>
+      </div>
+    </div>
+
+    <script defer>
+    document.addEventListener("DOMContentLoaded", function() {
+        var map = L.map('map').setView([-10.2, -48.3], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap Contributors'
+        }).addTo(map);
+
+        var marker = L.marker([-10.2097, -48.3243]).addTo(map);
+        marker.bindPopup("<strong>Parque Cesamar</strong><br>Local com fauna rica.<br><button onclick='abrirModal()'>Ver mais</button>");
+    });
+
+    function abrirModal() {
+        document.getElementById("species-modal").style.display = "flex";
+    }
+    </script>
+</body>
+</html>
